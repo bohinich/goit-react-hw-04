@@ -1,37 +1,44 @@
 import { useState } from 'react';
-import styles from './SearchBar.module.css';
 import toast from 'react-hot-toast';
+import css from './SearchBar.module.css';
 
-const SearchBar = ({ onSubmit }) => {
-  const [search, setSearch] = useState('');
+export default function SearchBar({ onSubmit }) {
+  const [query, setQuery] = useState('');
 
-  const handleChange = e => setSearch(e.target.value);
+  const handleChange = event => {
+    setQuery(event.target.value);
+  };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (search.trim() === '') {
-      toast.error('Please enter a search term!');
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    const trimmedQuery = query.trim();
+
+    if (trimmedQuery === '') {
+      toast.error('Please enter a search term');
       return;
     }
-    onSubmit(search);
+
+    onSubmit(trimmedQuery);
+    setQuery('');
   };
 
   return (
-    <header className={styles.header}>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <header className={css.header}>
+      <form className={css.form} onSubmit={handleSubmit}>
         <input
+          className={css.input}
           type="text"
-          value={search}
-          onChange={handleChange}
-          placeholder="Search images and photos"
-          className={styles.input}
-          autoFocus
           autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={query}
+          onChange={handleChange}
         />
-        <button type="submit" className={styles.button}>Search</button>
+        <button className={css.button} type="submit">
+          Search
+        </button>
       </form>
     </header>
   );
-};
-
-export default SearchBar;
+}
